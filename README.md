@@ -2,7 +2,9 @@
 This is an alarm service for monitoring resource creation related to k8s. Currently, only resource addition alarms for deployment, pod, and job are added.
 Relevant alarm information will be sent to your webhook address. Here we tested the enterprise wechat.
 The effect is shown in the figure
-![image](https://github.com/user-attachments/assets/e122c648-5ddd-406b-8cde-6d9d0273c4b5)
+
+![image](https://github.com/user-attachments/assets/21c02b1f-200f-40ad-85a4-201f82728c67)
+
 
 New Pod added: kube-scheduler-yuren
 Namespace: kube-system
