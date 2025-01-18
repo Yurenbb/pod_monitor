@@ -1,0 +1,77 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: webhook-url-config
+  namespace: # YOUR_NAMESPACE
+data:
+  url.txt: "YOUR_WEBHOOK_URL"
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: pod-monitor-sa
+  namespace: # YOUR_NAMESPACE  
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: pod-monitor-role
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch", "create"]
+  - apiGroups: ["batch"]
+    resources: ["jobs"]
+    verbs: ["get", "list", "watch", "create"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "watch", "create"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: pod-monitor-role-binding
+subjects:
+  - kind: ServiceAccount
+    name: pod-monitor-sa
+    namespace: # YOUR_NAMESPACE 
+roleRef:
+  kind: ClusterRole
+  name: pod-monitor-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod-job-monitor
+  namespace: # YOUR_NAMESPACE
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pod-job-monitor
+  template:
+    metadata:
+      labels:
+        app: pod-job-monitor
+    spec:
+      serviceAccountName: pod-monitor-sa  
+      containers:
+      - name: pod-job-monitor
+        image: registry.cn-hangzhou.aliyuncs.com/liguifeng/pod_monitor:1.2
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: webhook-url-volume
+          mountPath: /app/url.txt  
+          subPath: url.txt  
+      volumes:
+      - name: webhook-url-volume
+        configMap:
+          name: webhook-url-config
+      imagePullSecrets:
+        - name: registry-key
+
