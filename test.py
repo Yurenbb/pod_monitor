@@ -14,7 +14,7 @@ w = watch.Watch()
 
 # url写死
 #def send_alert(message):
-#    webhook_url = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=6bf975ba-cc91-460e-ae45-0b13068b8d6b"  # 替换为你的企业微信 webhook URL
+#    webhook_url = "############"  #webhook URL
 #    requests.post(webhook_url, json={"msgtype": "text", "text": {"content": message}})
 
 #url读取文件
