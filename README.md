@@ -1,4 +1,4 @@
-# pod_monitor
+# k8s_add_resource_monitor
 This is an alarm service for monitoring resource creation related to k8s. Currently, only resource addition alarms for deployment, pod, and job are added.
 Relevant alarm information will be sent to your webhook address. Here we tested the enterprise wechat.
 The effect is shown in the figure
